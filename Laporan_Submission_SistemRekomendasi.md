@@ -145,7 +145,6 @@ Fungsi collaborative_recommendations(user_id, top_n=5) digunakan untuk menghasil
 - Mampu menangani data yang sparse lebih baik daripada beberapa metode memory-based karena melakukan generalisasi dari data yang ada.
 - Prediksi rating bisa lebih akurat karena model mempelajari pola yang kompleks dari data.
 - Setelah model dilatih, proses pembuatan rekomendasi bisa lebih cepat untuk pengguna baru atau saat ada banyak item, karena tidak perlu menghitung ulang kemiripan dengan semua pengguna/item lain secara real-time.
-- Dapat mengatasi masalah cold-start untuk item (jika item memiliki fitur yang bisa dimasukkan ke model, meskipun di implementasi ini fokus pada User_ID dan Product_ID sebagai input fitur utama ke RF).
 
 #### Kekurangan Model-Based Collaborative Filtering (Random Forest)
 - Proses pelatihan model bisa memakan waktu dan sumber daya komputasi yang signifikan, terutama dengan dataset besar.
@@ -189,43 +188,35 @@ NDCG@K memberikan penalti jika item relevan muncul di posisi bawah dalam daftar 
 - Precision@K = 0.2
 - Recall@K = 0.2
 - F1@K = 0.2
-- NDCG@K = 0.43
+- NDCG@K = 0.430677
 
 ## Hasil Inference (Terhadap preferensi user_id=user_10 product_name="Super Foundation", dan brand="Charlotte Tilbury")
 
 ### Content Based Filtering
-+----+---------------------+-------------------+-------------+--------------------+
-|    | Product_Name        | Brand             | Category    |   Predicted_Rating |
-+====+=====================+===================+=============+====================+
-|  0 | Super Foundation    | Charlotte Tilbury | Highlighter |           0.830567 |
-+----+---------------------+-------------------+-------------+--------------------+
-|  1 | Divine Foundation   | Charlotte Tilbury | Highlighter |           0.794204 |
-+----+---------------------+-------------------+-------------+--------------------+
-|  2 | Perfect Lipstick    | Charlotte Tilbury | Highlighter |           0.791222 |
-+----+---------------------+-------------------+-------------+--------------------+
-|  3 | Perfect Highlighter | Charlotte Tilbury | Primer      |           0.789489 |
-+----+---------------------+-------------------+-------------+--------------------+
-|  4 | Super Lipstick      | Charlotte Tilbury | Highlighter |           0.771009 |
-+----+---------------------+-------------------+-------------+--------------------+
+| No | Product_Name        | Brand             | Category    | Predicted_Rating |
+|----|---------------------|-------------------|-------------|------------------|
+| 0  | Super Foundation    | Charlotte Tilbury | Highlighter | 0.830567         |
+| 1  | Divine Foundation   | Charlotte Tilbury | Highlighter | 0.794204         |
+| 2  | Perfect Lipstick    | Charlotte Tilbury | Highlighter | 0.791222         |
+| 3  | Perfect Highlighter | Charlotte Tilbury | Primer      | 0.789489         |
+| 4  | Super Lipstick      | Charlotte Tilbury | Highlighter | 0.771009         |
 
 ### Collaborative Filtering
-+----+------------------+-------------------+--------------------+
-|    | Product_Name     | Brand             |   Predicted_Rating |
-+====+==================+===================+====================+
-|  0 | Super Face Oil   | Sisley            |            4.75129 |
-+----+------------------+-------------------+--------------------+
-|  1 | Magic Foundation | Fenty Beauty      |            4.74137 |
-+----+------------------+-------------------+--------------------+
-|  2 | Super Contour    | ColourPop         |            4.71937 |
-+----+------------------+-------------------+--------------------+
-|  3 | Super Blush      | Ilia Beauty       |            4.67924 |
-+----+------------------+-------------------+--------------------+
-|  4 | Super Foundation | Charlotte Tilbury |            4.69243 |
-+----+------------------+-------------------+--------------------+
+| No | Product_Name     | Brand             | Predicted_Rating |
+|----|------------------|-------------------|------------------|
+| 0  | Super Face Oil   | Sisley            | 4.75129          |
+| 1  | Magic Foundation | Fenty Beauty      | 4.74137          |
+| 2  | Super Contour    | ColourPop         | 4.71937          |
+| 3  | Super Blush      | Ilia Beauty       | 4.67924          |
+| 4  | Super Foundation | Charlotte Tilbury | 4.69243          |
 
 ## Daftar Pustaka
-Alibaba. (2023). 7 Key Beauty Industry Consumer Behavior Trends for 2023. Retrieved from https://reads.alibaba.com/7-key-beauty-industry-consumer-behavior-trends-for-2023/ <br>
-Crespo, R. G., Martínez, O. S., Lovelle, J. M. C., García-Bustelo, B. C. P., Gayo, J. E. L., & Pablos, P. O. (2011). Recommendation system based on user interaction data applied to intelligent electronic books. Computers in Human Behavior, 27(4), 1445–1449. <br>
-Dakhel, A., & Mahdavi, M. (2013). A new collaborative filtering algorithm using K-means clustering and neighbors’ voting. In Proc. Int. Conf. Hybrid Intell. Syst. (pp. 179–184). <br>
-Kim, D. Y. (2021). Changes in purchasing patterns in the beauty market due to Post–COVID‐19: Literature review. PMC. doi: 10.1111/jocd.14506 <br>
-Lee, G., Yoon, H., Kim, S., Lee, C., Lee, J., & Yoo, S. (2023). A Content-based Skincare Product Recommendation System. ResearchGate. Retrieved from https://www.researchgate.net/publication/376468925
+Alibaba (2023). 7 key beauty industry consumer behavior trends for 2023. Available at: https://reads.alibaba.com/7-key-beauty-industry-consumer-behavior-trends-for-2023/ (Accessed: [insert date]).
+<br>
+Crespo, R.G., Martínez, O.S., Lovelle, J.M.C., García-Bustelo, B.C.P., Gayo, J.E.L. and Pablos, P.O. (2011). Recommendation system based on user interaction data applied to intelligent electronic books. Computers in Human Behavior, 27(4), pp.1445–1449.
+<br>
+Dakhel, A. and Mahdavi, M. (2013). A new collaborative filtering algorithm using K-means clustering and neighbors’ voting. In: Proceedings of the International Conference on Hybrid Intelligent Systems, pp.179–184.
+<br>
+Kim, D.Y. (2021). Changes in purchasing patterns in the beauty market due to Post–COVID‐19: Literature review. Journal of Cosmetic Dermatology [online]. Available at: https://doi.org/10.1111/jocd.14506 (Accessed: [insert date]).
+<br>
+Lee, G., Yoon, H., Kim, S., Lee, C., Lee, J. and Yoo, S. (2023). A content-based skincare product recommendation system. ResearchGate. Available at: https://www.researchgate.net/publication/376468925 (Accessed: [insert date]).
