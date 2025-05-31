@@ -55,8 +55,9 @@ Hasil ringkasan statistik deskriptif dari DataFrame menggunakan fungsi df.descri
 Price_USD: Harga produk bervariasi dengan rata-rata USD 80.13 dan standar deviasi USD 40.40, menunjukkan rentang harga yang lebar dari produk terjangkau hingga premium. Produk dengan harga di bawah USD 50 dan di atas USD 100 cukup banyak, mencerminkan keragaman segmen pasar (terjangkau vs. mewah), yang relevan untuk personalisasi rekomendasi berdasarkan anggaran pengguna. <br>
 Rating: Rating rata-rata produk adalah 3.00 (skala 1.0–5.0) dengan standar deviasi 1.17, mengindikasikan variasi kepuasan pengguna. Sekitar 25% produk memiliki rating ≥ 4.0, yang relevan untuk menentukan relevance threshold (4.0) dalam evaluasi. Rating produk cenderung terdistribusi merata, dengan sedikit produk mencapai rating 5.0. Ini menunjukkan perlunya sistem rekomendasi yang fokus pada produk dengan rating tinggi untuk meningkatkan kepuasan pengguna. <br>
 Number_of_Reviews: Jumlah ulasan rata-rata 5.014, dengan maksimum 10.000, menunjukkan beberapa produk sangat populer. Hal ini dapat memengaruhi rekomendasi berbasis popularitas dalam collaborative filtering. <br>
+
 **Distribusi Fitur Kategorikal** <br>
--Memeriksa distribusi fitur kategorikal <br>
+-Memeriksa distribusi fitur kategori <br>
 ![Distribusi Kategori](./image/distribusi_kategori.png)
 Grafik batang tersebut menunjukkan distribusi jumlah produk berdasarkan kategori dalam dataset kosmetik. Secara umum, semua kategori memiliki jumlah produk yang relatif seimbang, berkisar antara sekitar 580 hingga lebih dari 700 produk. Kategori dengan jumlah produk terbanyak adalah Serum, disusul oleh Mascara dan Face Oil, yang masing-masing memiliki lebih dari 680 produk. Sementara kategori dengan jumlah produk paling sedikit adalah Powder, Lip Gloss, dan Exfoliator. Grafik ini menggambarkan bahwa meskipun variasi antar kategori tidak terlalu ekstrem, ada beberapa kategori yang lebih dominan dalam hal jumlah produk yang tersedia dalam dataset.
 - Memeriksa distribusi fitur jenis kulit <br>
