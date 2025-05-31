@@ -120,14 +120,14 @@ Setelah mendapatkan matriks TF-IDF, kemiripan antar produk dihitung menggunakan 
 Fungsi content_based_recommendations(product_name, brand, top_n=5) dibuat untuk menghasilkan rekomendasi. Fungsi ini mengambil nama produk sebagai input, mencari produk tersebut dalam matriks kemiripan, dan mengembalikan top_n produk lain yang paling mirip. Dalam notebook, fungsi ini dipanggil melalui get_recommendations_and_evaluate yang kemudian mencetak hasilnya dalam bentuk tabel.
 
 #### Kelebihan Content Based Filtering
--Dapat merekomendasikan item baru yang belum memiliki interaksi pengguna (mengatasi item cold-start jika fitur item tersedia).
--Rekomendasi bersifat spesifik terhadap preferensi pengguna berdasarkan fitur produk yang disukainya.
--Tidak memerlukan data dari pengguna lain, sehingga lebih menjaga privasi.
+- Dapat merekomendasikan item baru yang belum memiliki interaksi pengguna (mengatasi item cold-start jika fitur item tersedia).
+- Rekomendasi bersifat spesifik terhadap preferensi pengguna berdasarkan fitur produk yang disukainya.
+- Tidak memerlukan data dari pengguna lain, sehingga lebih menjaga privasi.
 
 #### Kekurangan Content Based Filtering
--Terbatas pada fitur produk yang ada; jika fitur kurang deskriptif, kualitas rekomendasi menurun.
--Kurang mampu memberikan rekomendasi yang mengejutkan atau beragam (serendipity) karena cenderung merekomendasikan produk yang sangat mirip dengan yang sudah dikenal pengguna (overspecialization).
--Membutuhkan domain knowledge yang baik untuk mengekstrak fitur yang relevan.
+- Terbatas pada fitur produk yang ada; jika fitur kurang deskriptif, kualitas rekomendasi menurun.
+- Kurang mampu memberikan rekomendasi yang mengejutkan atau beragam (serendipity) karena cenderung merekomendasikan produk yang sangat mirip dengan yang sudah dikenal pengguna (overspecialization).
+- Membutuhkan domain knowledge yang baik untuk mengekstrak fitur yang relevan.
 
 ### Collaborative Filtering
 Pendekatan kedua adalah Model-Based Collaborative Filtering. Berbeda dengan memory-based collaborative filtering yang menghitung kemiripan antar pengguna atau item secara langsung dari data historis, pendekatan model-based membangun sebuah model prediktif dari data rating pengguna. Dalam kasus ini, model yang digunakan adalah Random Forest Regressor.
