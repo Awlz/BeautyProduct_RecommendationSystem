@@ -10,20 +10,18 @@ Sistem rekomendasi berbasis content-based dan collaborative filtering diperlukan
 
 ### Problem Statements
 
-Menjelaskan pernyataan masalah:
 - Bagaimana cara membantu konsumen menemukan produk kecantikan yang sesuai dengan jenis kulit dan masalah kulit mereka di tengah banyaknya pilihan produk di pasar?
 - Bagaimana cara menyediakan rekomendasi produk kecantikan yang dipersonalisasi berdasarkan preferensi individu pengguna, seperti jenis kulit atau bahan aktif yang diinginkan?
 - Bagaimana cara mengurangi waktu dan usaha konsumen dalam meneliti produk kecantikan untuk menemukan pilihan yang paling relevan dan efektif?
 
 ### Goals
 
-Menjelaskan tujuan proyek yang menjawab pernyataan masalah:
 - Menyediakan Rekomendasi yang Relevan dengan menyarankan produk kecantikan yang sesuai dengan jenis kulit (misalnya, sensitif, berminyak) dan masalah kulit pengguna, berdasarkan fitur produk seperti bahan utama dan kategori.
 - Meningkatkan Personalisasi dengan membangun sistem yang memanfaatkan data preferensi pengguna dari ratings_df dan karakteristik produk untuk memberikan rekomendasi yang disesuaikan dengan kebutuhan individu.
 - Mengoptimalkan Efisiensi Belanja dengan menciptakan sistem yang memberikan rekomendasi cepat dan akurat, sehingga mengurangi waktu penelitian konsumen dan meminimalkan pengembalian produk.
 
 ### Solution statements
-Untuk mencapai tujuan di atas, proyek ini menerapkan dua pendekatan utama dalam sistem rekomendasi yang telah diimplementasikan:
+Untuk mencapai tujuan, proyek ini menerapkan dua pendekatan utama dalam sistem rekomendasi yang telah diimplementasikan:
 - Content-Based Filtering <br>
 Pendekatan ini menjawab pertanyaan masalah dengan menganalisis fitur produk seperti nama produk, merek, kategori, bahan utama, dan jenis kulit menggunakan TF-IDF (Term Frequency-Inverse Document Frequency) dan cosine similarity untuk merekomendasikan produk serupa dengan yang telah disukai pengguna. Sistem memfilter produk yang belum diinteraksikan berdasarkan ratings_df. Memberikan rekomendasi yang sangat relevan untuk kebutuhan spesifik, seperti produk dengan retinol untuk anti-penuaan atau cocok untuk kulit sensitif, sehingga menjawab kebutuhan personalisasi.
 - Collaborative Filtering <br>
