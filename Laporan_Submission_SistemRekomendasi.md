@@ -160,27 +160,21 @@ Fungsi evaluate_recommendations digunakan untuk menghitung tiga metrik utama pad
 #### Precision@K
 Precision@K mengukur seberapa banyak item yang direkomendasikan dalam K item teratas yang benar-benar relevan bagi pengguna. Metrik ini penting untuk memahami akurasi dari item yang paling terlihat oleh pengguna.
 - Formula <br>
-Precision@k = (Number of relevant items in top-k recommendations) / k
-            = |Recommendedₖ ∩ Relevant| / k
+![Precison@k](./image/precisionatk.png)
 - Cara kerja <br>
 Jika dari 5 item yang direkomendasikan (K=5), ada 3 item yang memang relevan (sesuai dengan history dan rating pengguna ≥0.4), maka Precision@5 adalah 3/5=0.6. Nilai yang lebih tinggi menunjukkan bahwa lebih banyak rekomendasi di posisi teratas yang berguna.
 
 #### Recall@K
 Recall@K mengukur seberapa banyak item yang relevan bagi pengguna yang berhasil direkomendasikan dalam K item teratas, dari keseluruhan item yang relevan untuk pengguna tersebut.
 - Formula <br>
-\[
-\text{Recall@k} = \frac{|\text{Recommended}_k \cap \text{Relevant}|}{|\text{Relevant}|}
-\]
-
+![Recall@k](./image/recallatk.png)
 - Cara kerja <br>
 Jika pengguna memiliki total 10 item yang dianggap relevan baginya, dan 3 di antaranya muncul dalam 5 rekomendasi teratas, maka Recall@5 adalah 3/10=0.3. Metrik ini menunjukkan kemampuan model untuk menemukan semua item yang mungkin disukai pengguna.
 
 #### Normalized Discounted Cumulative Gain (NDCG@K)
 NDCG@K adalah metrik yang mengevaluasi kualitas peringkat dari rekomendasi. Tidak hanya memperhitungkan jumlah item relevan yang direkomendasikan, tetapi juga posisi item relevan tersebut dalam daftar rekomendasi. Item relevan yang muncul di posisi lebih atas mendapatkan bobot lebih tinggi.
 - Formula <br>
-\[
-\text{IDCG@k} = \sum_{i=1}^{|REL_k|} \frac{1}{\log_2(i+1)}
-\]
+![NDVG@k](./image/ndcgatk.png)
 - Cara kerja <br>
 NDCG@K memberikan penalti jika item relevan muncul di posisi bawah dalam daftar rekomendasi. Misalnya, merekomendasikan item relevan di posisi 1 lebih baik daripada di posisi 5.
 
