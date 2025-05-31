@@ -190,7 +190,7 @@ NDCG@K memberikan penalti jika item relevan muncul di posisi bawah dalam daftar 
 - F1@K = 0.2
 - NDCG@K = 0.430677
 
-## Hasil Inference (Terhadap preferensi user_id=user_10 product_name="Super Foundation", dan brand="Charlotte Tilbury")
+## Hasil Inference (Terhadap preferensi user_id=user_10, product_name="Super Foundation", dan brand="Charlotte Tilbury")
 
 ### Content Based Filtering
 | No | Product_Name        | Brand             | Category    | Predicted_Rating |
