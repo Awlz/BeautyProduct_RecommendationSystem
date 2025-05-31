@@ -160,9 +160,8 @@ Fungsi evaluate_recommendations digunakan untuk menghitung tiga metrik utama pad
 #### Precision@K
 Precision@K mengukur seberapa banyak item yang direkomendasikan dalam K item teratas yang benar-benar relevan bagi pengguna. Metrik ini penting untuk memahami akurasi dari item yang paling terlihat oleh pengguna.
 - Formula <br>
-\[
-\text{Precision@k} = \frac{|\text{Recommended}_k \cap \text{Relevant}|}{k}
-\]
+Precision@k = (Number of relevant items in top-k recommendations) / k
+            = |Recommendedₖ ∩ Relevant| / k
 - Cara kerja <br>
 Jika dari 5 item yang direkomendasikan (K=5), ada 3 item yang memang relevan (sesuai dengan history dan rating pengguna ≥0.4), maka Precision@5 adalah 3/5=0.6. Nilai yang lebih tinggi menunjukkan bahwa lebih banyak rekomendasi di posisi teratas yang berguna.
 
