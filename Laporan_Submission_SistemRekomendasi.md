@@ -21,7 +21,7 @@ Sistem rekomendasi berbasis content-based dan collaborative filtering diperlukan
 - Mengoptimalkan Efisiensi Belanja dengan menciptakan sistem yang memberikan rekomendasi cepat dan akurat, sehingga mengurangi waktu penelitian konsumen dan meminimalkan pengembalian produk.
 
 ### Solution statements
-Untuk mencapai tujuan, proyek ini menerapkan sebuah pendekatan utama dalam sistem rekomendasi yaitu <b> Content-Based Filtering </b> <br>
+Untuk mencapai tujuan, proyek ini menerapkan sebuah pendekatan utama dalam sistem rekomendasi yaitu <b> Content-Based Filtering. </b> <br>
 Pendekatan ini menjawab pertanyaan masalah dengan menganalisis fitur produk seperti nama produk, merek, kategori, bahan utama, dan jenis kulit menggunakan TF-IDF (Term Frequency-Inverse Document Frequency) dan cosine similarity untuk merekomendasikan produk serupa dengan yang telah disukai pengguna. Sistem memfilter produk yang belum diinteraksikan berdasarkan ratings_df. Memberikan rekomendasi yang sangat relevan untuk kebutuhan spesifik, seperti produk dengan retinol untuk anti-penuaan atau cocok untuk kulit sensitif, sehingga menjawab kebutuhan personalisasi.
 
 ## Data Understanding
