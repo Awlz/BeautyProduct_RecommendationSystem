@@ -168,9 +168,9 @@ NDCG@K memberikan penalti jika item relevan muncul di posisi bawah dalam daftar 
 - F1@K = 0.2
 - NDCG@K = 1
 <br>
-| Precision@K | Recall@K     | F1@K             | NDCG@K |
-|----|------------------|-------------------|------------------|
-|  0.2  |  0.2   | 0.2            |  0.2          | 1
+| Precision@K | Recall@K | F1@K | NDCG@K |
+|-------------|----------|------|--------|
+|  0.2        |  0.2     | 0.2  |  1     | 
 
 #### Interpretasi Metrik Evaluasi
 - Precision@K = 0.2: Dari K produk yang direkomendasikan, hanya 20% yang relevan bagi user_10 berdasarkan preferensinya terhadap product_id_input=1. Ini berarti 80% dari rekomendasi yang diberikan mungkin tidak sesuai.
