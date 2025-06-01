@@ -32,10 +32,16 @@ df.head()
 df.info()
 
 # %% [markdown]
+# Dataset ini memiliki 15.000 entri dengan 14 fitur bertipe data yang sesuai tanpa nilai hilang (non-null), menunjukkan kondisi data yang bersih dan siap digunakan.
+
+# %% [markdown]
 # ##### Mendeskripsikan dataset untuk melihat identitas fitur numerik
 
 # %%
 df.describe()
+
+# %% [markdown]
+# Hasil ringkasan statistik deskriptif dari DataFrame menggunakan fungsi df.describe() untuk tiga kolom: Price_USD, Rating, dan Number_of_Reviews. Masing-masing kolom memiliki 15.000 data. Rata-rata harga adalah sekitar $80,13 dengan standar deviasi $40,40, menunjukkan variasi harga yang cukup besar antara produk. Nilai rating rata-rata adalah 3,00 dari skala 1 hingga 5, dengan persebaran yang tidak terlalu besar (standar deviasi 1,17). Sementara itu, jumlah ulasan memiliki rata-rata sekitar 5.014 dengan standar deviasi 2.855, menandakan bahwa sebagian produk mendapatkan jauh lebih banyak ulasan dibanding yang lain.
 
 # %% [markdown]
 # #### Memeriksa distribusi fitur numerik
@@ -50,6 +56,11 @@ for i, col in enumerate(numerical_features):
     
 plt.tight_layout()
 plt.show()
+
+# %% [markdown]
+# Price_USD: Harga produk bervariasi dengan rata-rata USD 80.13 dan standar deviasi USD 40.40, menunjukkan rentang harga yang lebar dari produk terjangkau hingga premium.  <br>
+# Rating: Rating rata-rata produk adalah 3.00 (skala 1.0–5.0) dengan standar deviasi 1.17, mengindikasikan variasi kepuasan pengguna. <br>
+# Number_of_Reviews: Jumlah ulasan rata-rata 5.014, dengan maksimum 10.000, menunjukkan beberapa produk sangat populer.
 
 # %% [markdown]
 # #### Memeriksa distribusi fitur kategorikal
@@ -74,6 +85,9 @@ plt.title('Korelasi Fitur Numerik')
 plt.show()
 
 # %% [markdown]
+# Heatmap korelasi ini menunjukkan hubungan antar fitur numerik: Price_USD, Rating, dan Number_of_Reviews. Hasilnya memperlihatkan bahwa ketiga fitur tersebut memiliki korelasi yang sangat lemah satu sama lain, dengan nilai mendekati nol. Artinya, harga produk, rating, dan jumlah ulasan cenderung saling independen dan tidak memiliki hubungan linear yang signifikan, sehingga perubahan pada satu fitur tidak bisa digunakan untuk memprediksi fitur lainnya secara langsung.
+
+# %% [markdown]
 # #### Memeriksa distribusi fitur kategori terhadap rating produk
 
 # %%
@@ -84,10 +98,10 @@ plt.title('Rating per Kategori Produk')
 plt.show()
 
 # %% [markdown]
-# ## Data Preparation
+# Setiap kotak merepresentasikan sebaran rating produk dalam satu kategori, dengan garis tengah sebagai median. Mayoritas kategori memiliki median rating sekitar 3 hingga 3.5, menunjukkan bahwa sebagian besar produk mendapat penilaian cukup baik. Namun, ada variasi lebar boxplot yang mengindikasikan perbedaan penyebaran rating antar kategori, misalnya kategori seperti "Contour" tampak memiliki persebaran rating yang lebih tinggi. 
 
-# %%
-print(df.isnull().sum())
+# %% [markdown]
+# ## Data Preparation
 
 # %% [markdown]
 # ##### Encoding fitur kategorikal
@@ -98,6 +112,9 @@ le_category = LabelEncoder()
 le_skin_type = LabelEncoder()
 le_ingredient = LabelEncoder()
 le_usage = LabelEncoder()
+
+# %% [markdown]
+# Fitur kategorikal yang bersifat non-numerik seperti Brand, Category, Skin_Type, Main_Ingredient, dan Usage_Frequency diubah menjadi bentuk numerik menggunakan teknik Label Encoding melalui LabelEncoder dari sklearn.preprocessing.
 
 # %% [markdown]
 # #### Transformasi fitur kategorikal
@@ -123,6 +140,9 @@ ratings_df = pd.DataFrame({
 })
 
 # %% [markdown]
+# Data user dummy ini <b> hanya digunakan untuk mengevaluasi hasil rekomendasi karena dataset tidak mendukung data riwayat pengguna. </b> DataFrame ratings_df yang berisi data simulasi dummy ulasan pengguna terhadap produk kecantikan. Terdapat dua pengguna (user_10 dan user_11) yang masing-masing memberikan rating terhadap beberapa produk, dengan mencantumkan nama produk (Product_Name), merek (Brand), dan nilai rating numerik.
+
+# %% [markdown]
 # #### Precompute TF-IDF and cosine similarity
 
 # %%
@@ -134,20 +154,10 @@ tfidf_matrix = tfidf.fit_transform(df['Product_Name'] + ' ' + df['Brand'] + ' ' 
 cosine_sim = cosine_similarity(tfidf_matrix, tfidf_matrix)
 
 # %% [markdown]
-# ## Training Model
+# Untuk membangun sistem rekomendasi berbasis konten (content-based), digunakan metode TF-IDF (Term Frequency-Inverse Document Frequency) dari sklearn.feature_extraction.text.TfidfVectorizer. Hasil dari TF-IDF matrix kemudian digunakan untuk menghitung cosine similarity untuk mengidentifikasi produk lain yang mirip dengan preferensi pengguna.
 
 # %% [markdown]
-# #### Train model random forest
-
-# %%
-print("Training RandomForest model...")
-X = df[['Brand_Encoded', 'Category_Encoded', 'Skin_Type_Encoded', 'Main_Ingredient_Encoded', 'Usage_Frequency_Encoded']]
-y = df['Rating']
-
-# %%
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
-model = RandomForestRegressor(n_estimators=50, random_state=42, n_jobs=-1)
-model.fit(X_train, y_train)
+# ## Training Model
 
 # %% [markdown]
 # #### Cache untuk rekomendasi
@@ -175,76 +185,7 @@ def content_based_recommendations(product_name, brand, top_n=5):
     return result.reset_index(drop=True)
 
 # %% [markdown]
-# ## Collaborative filtering
-
-# %%
-def collaborative_recommendations(user_id, top_n=5):
-    if user_id in recommendation_cache:
-        print(f"Returning cached recommendations for user {user_id}")
-        return recommendation_cache[user_id]
-    
-    print(f"Generating collaborative recommendations for user {user_id}...")
-    
-    # Filter out interacted items
-    interacted_items = ratings_df[ratings_df['user'] == user_id][['Product_Name', 'Brand']]
-    candidates = df.merge(interacted_items, on=['Product_Name', 'Brand'], how='left', indicator=True)
-    candidates = candidates[candidates['_merge'] == 'left_only'][df.columns].copy()
-    
-    # Reduce candidate set by Category
-    user_rated_items = ratings_df[(ratings_df['user'] == user_id) & (ratings_df['rating'] >= 4.0)]
-    if not user_rated_items.empty:
-        rated_categories = df.merge(user_rated_items[['Product_Name', 'Brand']], 
-                                   on=['Product_Name', 'Brand'])['Category_Encoded'].unique()
-        candidates = candidates[candidates['Category_Encoded'].isin(rated_categories)]
-    
-    # Sample candidates if too large
-    max_candidates = 1000
-    if len(candidates) > max_candidates:
-        candidates = candidates.sample(n=max_candidates, random_state=42)
-    
-    print(f"Number of candidate items: {len(candidates)}")
-    
-    if candidates.empty:
-        print("No candidates available after filtering")
-        return pd.DataFrame([{"Product_Name": "No Candidates", "Brand": "-", "Predicted_Rating": 0}])
-    
-    # Predict ratings
-    features = candidates[['Brand_Encoded', 'Category_Encoded', 'Skin_Type_Encoded', 
-                          'Main_Ingredient_Encoded', 'Usage_Frequency_Encoded']]
-    candidates['Predicted_Rating'] = model.predict(features)
-    
-    # Vectorized similarity boosting
-    if not user_rated_items.empty:
-        rated_indices = df.merge(user_rated_items[['Product_Name', 'Brand']], 
-                                on=['Product_Name', 'Brand']).index
-        candidate_indices = candidates.index
-        sim_scores = cosine_sim[candidate_indices][:, rated_indices]
-        mean_sim_scores = np.mean(sim_scores, axis=1)
-        candidates['Predicted_Rating'] += mean_sim_scores  # Weight = 1.0
-    
-    # Debugging: Top 10 candidates
-    top_candidates = candidates[['Product_Name', 'Brand', 'Predicted_Rating']].sort_values(by='Predicted_Rating', ascending=False).head(10)
-    print("Top 10 candidate items:")
-    print(tabulate(top_candidates, headers="keys", tablefmt="grid"))
-    
-    # Memilih top_n items
-    candidates = candidates[['Product_Name', 'Brand', 'Predicted_Rating']].sort_values(by='Predicted_Rating', ascending=False).head(top_n)
-    
-    # Fallback: Include one relevant item
-    recommended_set = set(candidates.apply(lambda x: f"{x['Product_Name']}|{x['Brand']}", axis=1))
-    relevant_set = set(user_rated_items.apply(lambda x: f"{x['Product_Name']}|{x['Brand']}", axis=1))
-    if not recommended_set.intersection(relevant_set) and not user_rated_items.empty:
-        fallback_item = user_rated_items.sample(1)[['Product_Name', 'Brand']].iloc[0]
-        fallback_rating = candidates['Predicted_Rating'].mean() if not candidates.empty else 4.0
-        fallback_row = pd.DataFrame([{
-            'Product_Name': fallback_item['Product_Name'],
-            'Brand': fallback_item['Brand'],
-            'Predicted_Rating': fallback_rating
-        }])
-        candidates = pd.concat([candidates.iloc[:-1], fallback_row]).reset_index(drop=True)
-    
-    recommendation_cache[user_id] = candidates
-    return candidates
+# Content-Based Filtering, merekomendasikan produk berdasarkan kemiripan fitur atau atribut produk itu sendiri. Fitur-fitur produk yang relevan seperti 'brand', 'Category', dan 'Product_Name' digabungkan menjadi satu teks deskriptif ('result') untuk setiap produk. TF-IDF memberikan bobot pada kata-kata yang penting dalam mendeskripsikan suatu produk relatif terhadap keseluruhan dataset produk. Setelah mendapatkan matriks TF-IDF, kemiripan antar produk dihitung menggunakan cosine similarity. Fungsi ini mengambil nama produk sebagai input, mencari produk tersebut dalam matriks kemiripan, dan mengembalikan top_n produk lain yang paling mirip.
 
 # %% [markdown]
 # ## Fungsi untuk evaluasi
@@ -289,6 +230,9 @@ def evaluate_recommendations(recommendations, user_id, ground_truth, k=5, releva
         return {'Precision@K': 0.0, 'Recall@K': 0.0, 'F1@K': 0.0, 'NDCG@K': 0.0}
 
 # %% [markdown]
+# Fungsi evaluate_recommendations digunakan untuk menghitung tiga metrik utama pada K=5 (artinya kita mengevaluasi 5 item teratas yang direkomendasikan). Sebuah produk dianggap "relevan" bagi pengguna jika pengguna tersebut memberikan rating ≥4.0 pada produk tersebut (relevance_threshold=4.0).
+
+# %% [markdown]
 # ## Pengeksekusian Fungsi
 
 # %%
@@ -302,19 +246,9 @@ if __name__ == '__main__':
     content_recs = content_based_recommendations("Super Foundation", "Charlotte Tilbury")
     print(tabulate(content_recs, headers="keys", tablefmt="grid"))
     
-    # Collaborative filtering recommendations
-    print("\nRECOMMENDATIONS - COLLABORATIVE FILTERING")
-    collab_recs = collaborative_recommendations(user_id)
-    print(tabulate(collab_recs, headers="keys", tablefmt="grid"))
-    
     # Evaluasi Content based recommendations
     print("\nEVALUATION - CONTENT BASED")
     content_metrics = evaluate_recommendations(content_recs, user_id, ratings_df, k=k, relevance_threshold=relevance_threshold)
     print(tabulate([content_metrics], headers="keys", tablefmt="grid"))
-    
-    # Evaluasi Collaborative Filtering recommendations
-    print("\nEVALUATION - COLLABORATIVE FILTERING")
-    collab_metrics = evaluate_recommendations(collab_recs, user_id, ratings_df, k=k, relevance_threshold=relevance_threshold)
-    print(tabulate([collab_metrics], headers="keys", tablefmt="grid"))
 
 
