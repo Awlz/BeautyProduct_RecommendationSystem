@@ -147,7 +147,7 @@ Recall@K mengukur seberapa banyak item yang relevan bagi pengguna yang berhasil 
 Jika pengguna memiliki total 10 item yang dianggap relevan baginya, dan 3 di antaranya muncul dalam 5 rekomendasi teratas, maka Recall@5 adalah 3/10=0.3. Metrik ini menunjukkan kemampuan model untuk menemukan semua item yang mungkin disukai pengguna.
 
 ### F1@K
-F1@K adalah metrik evaluasi yang menggabungkan Precision@K dan Recall@K untuk memberikan ukuran keseimbangan antara keduanya. F1@K berguna ketika kita ingin memastikan bahwa sistem rekomendasi tidak hanya memberikan rekomendasi yang akurat (precision tinggi), tetapi juga mencakup sebanyak mungkin item relevan (recall tinggi).
+F1@K adalah metrik evaluasi yang menggabungkan Precision@K dan Recall@K untuk memberikan ukuran keseimbangan antara keduanya.
 - Formula <br>
 ![f1@k](./image/f1atk.png)
 - Cara kerja <br>
