@@ -51,7 +51,7 @@ Hasil ringkasan statistik deskriptif dari DataFrame menggunakan fungsi df.descri
 ![Distribusi fitur numerik](./image/distribusi_fitur_numerik.png)
 Price_USD: Harga produk bervariasi dengan rata-rata USD 80.13 dan standar deviasi USD 40.40, menunjukkan rentang harga yang lebar dari produk terjangkau hingga premium. Produk dengan harga di bawah USD 50 dan di atas USD 100 cukup banyak, mencerminkan keragaman segmen pasar (terjangkau vs. mewah), yang relevan untuk personalisasi rekomendasi berdasarkan anggaran pengguna. <br>
 Rating: Rating rata-rata produk adalah 3.00 (skala 1.0–5.0) dengan standar deviasi 1.17, mengindikasikan variasi kepuasan pengguna. Sekitar 25% produk memiliki rating ≥ 4.0, yang relevan untuk menentukan relevance threshold (4.0) dalam evaluasi. Rating produk cenderung terdistribusi merata, dengan sedikit produk mencapai rating 5.0. Ini menunjukkan perlunya sistem rekomendasi yang fokus pada produk dengan rating tinggi untuk meningkatkan kepuasan pengguna. <br>
-Number_of_Reviews: Jumlah ulasan rata-rata 5.014, dengan maksimum 10.000, menunjukkan beberapa produk sangat populer. Hal ini dapat memengaruhi rekomendasi berbasis popularitas dalam collaborative filtering. <br>
+Number_of_Reviews: Jumlah ulasan rata-rata 5.014, dengan maksimum 10.000, menunjukkan beberapa produk sangat populer.<br>
 
 **Distribusi Fitur Kategorikal** <br>
 -Memeriksa distribusi fitur kategori <br>
@@ -101,7 +101,7 @@ Untuk membangun sistem rekomendasi berbasis konten (content-based), digunakan me
 Hasil dari TF-IDF matrix kemudian digunakan untuk menghitung cosine similarity untuk mengidentifikasi produk lain yang mirip dengan preferensi pengguna.
 
 ## Modeling
-Tahapan modeling bertujuan untuk mengembangkan sistem rekomendasi yang dapat membantu pengguna menemukan produk kecantikan yang paling sesuai dengan kebutuhan mereka. Dalam proyek ini, dua pendekatan algoritma yang berbeda diimplementasikan untuk menghasilkan rekomendasi top-N, yaitu Content-Based Filtering dan Collaborative Filtering.
+Tahapan modeling bertujuan untuk mengembangkan sistem rekomendasi yang dapat membantu pengguna menemukan produk kecantikan yang paling sesuai dengan kebutuhan mereka. Dalam proyek ini, pendekatan algoritma yang diimplementasikan yaitu Content-Based Filtering untuk menghasilkan rekomendasi top-N, .
 
 ### Content Based Filtering
 Pendekatan pertama, Content-Based Filtering, merekomendasikan produk berdasarkan kemiripan fitur atau atribut produk itu sendiri. Sistem ini tidak memerlukan data dari pengguna lain, melainkan fokus pada karakteristik produk yang pernah disukai atau sedang dilihat oleh pengguna.
