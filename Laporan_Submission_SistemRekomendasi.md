@@ -21,11 +21,8 @@ Sistem rekomendasi berbasis content-based dan collaborative filtering diperlukan
 - Mengoptimalkan Efisiensi Belanja dengan menciptakan sistem yang memberikan rekomendasi cepat dan akurat, sehingga mengurangi waktu penelitian konsumen dan meminimalkan pengembalian produk.
 
 ### Solution statements
-Untuk mencapai tujuan, proyek ini menerapkan dua pendekatan utama dalam sistem rekomendasi yang telah diimplementasikan:
-- Content-Based Filtering <br>
+Untuk mencapai tujuan, proyek ini menerapkan sebuah pendekatan utama dalam sistem rekomendasi yaitu <b> Content-Based Filtering </b> <br>
 Pendekatan ini menjawab pertanyaan masalah dengan menganalisis fitur produk seperti nama produk, merek, kategori, bahan utama, dan jenis kulit menggunakan TF-IDF (Term Frequency-Inverse Document Frequency) dan cosine similarity untuk merekomendasikan produk serupa dengan yang telah disukai pengguna. Sistem memfilter produk yang belum diinteraksikan berdasarkan ratings_df. Memberikan rekomendasi yang sangat relevan untuk kebutuhan spesifik, seperti produk dengan retinol untuk anti-penuaan atau cocok untuk kulit sensitif, sehingga menjawab kebutuhan personalisasi.
-- Collaborative Filtering <br>
-Pendekatan ini menjawab pertanyaan masalah dengan memprediksi rating produk yang belum diinteraksikan pengguna berdasarkan pola rating pengguna lain, menggunakan Random Forest Regressor pada fitur terenkode seperti merek, kategori, dan jenis kulit. Sistem memanfaatkan ratings_df untuk mengidentifikasi preferensi pengguna. Efektif untuk merekomendasikan produk populer di kalangan pengguna dengan preferensi serupa, meningkatkan cakupan rekomendasi dan efisiensi belanja.
 
 ## Data Understanding
 Dataset yang digunakan adalah most_used_beauty_cosmetics_products_extended.csv, yang berisi informasi produk kecantikan, serta dataset tambahan ratings_df yang dibuat secara sintetis untuk merepresentasikan preferensi pengguna. Dataset ini memiliki 15.000 entri dengan 14 fitur bertipe data yang sesuai tanpa nilai hilang (non-null), menunjukkan kondisi data yang bersih dan siap digunakan. Dataset ini bersumber dari Kaggle dengan domain tautan sebagai berikut: https://www.kaggle.com/datasets/waqi786/most-used-beauty-cosmetics-products-in-the-world.
@@ -95,7 +92,7 @@ Pada tahap ini, dilakukan beberapa langkah data preparation untuk mempersiapkan 
 Fitur kategorikal yang bersifat non-numerik seperti Brand, Category, Skin_Type, Main_Ingredient, dan Usage_Frequency diubah menjadi bentuk numerik menggunakan teknik Label Encoding melalui LabelEncoder dari sklearn.preprocessing.
 
 ### Pembuatan DataFrame Rating
-DataFrame ratings_df yang berisi data simulasi dummy ulasan pengguna terhadap produk kecantikan. Terdapat dua pengguna (user_10 dan user_11) yang masing-masing memberikan rating terhadap beberapa produk, dengan mencantumkan nama produk (Product_Name), merek (Brand), dan nilai rating numerik. Data ini berfungsi sebagai input eksplisit dalam sistem rekomendasi, di mana preferensi pengguna terhadap produk tertentu dapat digunakan untuk merekomendasikan produk lain yang relevan.
+DataFrame ratings_df berisi data ulasan pengguna yang disimulasikan (dummy) untuk produk kecantikan. Mengingat dataset utama yang digunakan tidak menyediakan data pengguna, apalagi riwayat interaksi mereka, ratings_df ini sengaja dibuat dengan menyertakan dua pengguna hipotetis (user_10 dan user_11) yang memberikan rating numerik terhadap beberapa produk (berdasarkan Product_Name dan Brand). Oleh karena itu, data dummy ini secara khusus dan semata-mata difungsikan untuk tahap evaluasi, yaitu untuk mengukur dan menilai relevansi produk yang direkomendasikan oleh sistem terhadap preferensi yang telah disimulasikan untuk pengguna-pengguna ini, bukan sebagai data latih untuk pembentukan model rekomendasi utama.
 
 ### Ekstraksi Fitur Teks dengan TF-IDF
 Untuk membangun sistem rekomendasi berbasis konten (content-based), digunakan metode TF-IDF (Term Frequency-Inverse Document Frequency) dari sklearn.feature_extraction.text.TfidfVectorizer.
@@ -129,30 +126,8 @@ Fungsi content_based_recommendations(product_name, brand, top_n=5) dibuat untuk 
 - Kurang mampu memberikan rekomendasi yang mengejutkan atau beragam (serendipity) karena cenderung merekomendasikan produk yang sangat mirip dengan yang sudah dikenal pengguna (overspecialization).
 - Membutuhkan domain knowledge yang baik untuk mengekstrak fitur yang relevan.
 
-### Collaborative Filtering
-Pendekatan kedua adalah Model-Based Collaborative Filtering. Berbeda dengan memory-based collaborative filtering yang menghitung kemiripan antar pengguna atau item secara langsung dari data historis, pendekatan model-based membangun sebuah model prediktif dari data rating pengguna. Dalam kasus ini, model yang digunakan adalah Random Forest Regressor.
-
-#### Langkah-Langkah Implementasi
-- Pembagian Data <br>
-Data fitur X dan target y (rating) dibagi menjadi set pelatihan dan pengujian menggunakan train_test_split dengan perbandingan 80:20. random_state=42 digunakan untuk memastikan hasil pembagian yang konsisten.
-- Pelatihan Model Random Forest <br>
-Sebuah model RandomForestRegressor diinisialisasi dan dilatih. Model ini menggunakan fitur-fitur dari data pelatihan (X_train) untuk memprediksi Rating (y_train). Fitur X_train ini idealnya mencakup informasi yang memungkinkan model mempelajari preferensi pengguna terhadap item ('Brand_Encoded', 'Category_Encoded', 'Skin_Type_Encoded', 'Main_Ingredient_Encoded', 'Usage_Frequency_Encoded' untuk memprediksi rating berdasarkan atribut produk yang disukai pengguna). Parameter yang digunakan dalam kode adalah n_estimators=50: jumlah pohon dalam forest diatur menjadi 50 random_state=42: untuk reproduktifitas hasil, n_jobs=-1: menggunakan semua prosesor yang tersedia untuk paralelisasi proses pelatihan, yang dapat mempercepat training.
-- Pembuatan Fungsi Rekomendasi <br>
-Fungsi collaborative_recommendations(user_id, top_n=5) digunakan untuk menghasilkan rekomendasi produk bagi user_id tertentu. Melalui mekanisme chace, Fungsi ini pertama-tama memeriksa apakah rekomendasi untuk user_id sudah ada di recommendation_cache. Jika ya, rekomendasi yang sudah ada dikembalikan untuk efisiensi. Untuk mempersempit jumlah kandidat, fungsi ini memfilter candidates berdasarkan kategori produk yang pernah diberi rating tinggi (>= 4.0) oleh pengguna. Ini membantu memberikan rekomendasi yang lebih relevan dengan preferensi kategori pengguna. Jika jumlah kandidat masih terlalu besar (lebih dari max_candidates = 1000), sampel acak diambil untuk prediksi demi efisiensi. Dalam fungsi ini, fitur yang digunakan untuk prediksi pada item kandidat adalah atribut produk yang sudah di-encode: ['Brand_Encoded', 'Category_Encoded', 'Skin_Type_Encoded', 'Main_Ingredient_Encoded', 'Usage_Frequency_Encoded']. Ini mengimplikasikan bahwa model RandomForestRegressor telah mempelajari bagaimana preferensi rating pengguna (dari data y_train) berkorelasi dengan fitur-fitur produk ini (dari data X_train). Jika pengguna memiliki item yang pernah dirating tinggi, skor prediksi rating dari Random Forest ditingkatkan berdasarkan rata-rata skor kesamaan kosinus (cosine_sim) antara item kandidat dengan item-item yang pernah dirating tinggi oleh pengguna. Produk-produk kandidat kemudian diurutkan berdasarkan prediksi rating tertinggi (setelah boosting), dan top_n produk teratas dikembalikan sebagai rekomendasi.
-
-#### Kelebihan Model-Based Collaborative Filtering (Random Forest)
-- Mampu menangani data yang sparse lebih baik daripada beberapa metode memory-based karena melakukan generalisasi dari data yang ada.
-- Prediksi rating bisa lebih akurat karena model mempelajari pola yang kompleks dari data.
-- Setelah model dilatih, proses pembuatan rekomendasi bisa lebih cepat untuk pengguna baru atau saat ada banyak item, karena tidak perlu menghitung ulang kemiripan dengan semua pengguna/item lain secara real-time.
-
-#### Kekurangan Model-Based Collaborative Filtering (Random Forest)
-- Proses pelatihan model bisa memakan waktu dan sumber daya komputasi yang signifikan, terutama dengan dataset besar.
-- Model bersifat black box (kurang interpretatif) dibandingkan dengan metode memory-based yang lebih mudah dijelaskan mengapa suatu item direkomendasikan.
-- Membutuhkan rekayasa fitur dan pemilihan model yang tepat; performa sangat bergantung pada kualitas model.
-- Masih menghadapi masalah user cold-start: jika pengguna baru tidak memiliki data interaksi sama sekali, model tidak dapat membuat prediksi yang akurat untuknya tanpa adanya fitur pengguna tambahan.
-
 ## Evaluation
-Tahap evaluasi bertujuan untuk mengukur performa dari model-model sistem rekomendasi yang telah dikembangkan, yaitu Content-Based Filtering dan Collaborative Filtering (berbasis model Random Forest). Metrik evaluasi yang dipilih disesuaikan dengan konteks permasalahan, yaitu memberikan rekomendasi produk yang relevan dari sejumlah kecil produk teratas (top-N recommendation).
+Tahap evaluasi bertujuan untuk mengukur performa dari sistem rekomendasi yang telah dikembangkan, yaitu Content-Based Filtering. Metrik evaluasi yang dipilih disesuaikan dengan konteks permasalahan, yaitu memberikan rekomendasi produk yang relevan dari sejumlah kecil produk teratas (top-N recommendation).
 
 ### Metrik Evaluasi yang Digunakan
 Fungsi evaluate_recommendations digunakan untuk menghitung tiga metrik utama pada K=5 (artinya kita mengevaluasi 5 item teratas yang direkomendasikan). Sebuah produk dianggap "relevan" bagi pengguna jika pengguna tersebut memberikan rating ≥4.0 pada produk tersebut (relevance_threshold=4.0).
@@ -171,6 +146,13 @@ Recall@K mengukur seberapa banyak item yang relevan bagi pengguna yang berhasil 
 - Cara kerja <br>
 Jika pengguna memiliki total 10 item yang dianggap relevan baginya, dan 3 di antaranya muncul dalam 5 rekomendasi teratas, maka Recall@5 adalah 3/10=0.3. Metrik ini menunjukkan kemampuan model untuk menemukan semua item yang mungkin disukai pengguna.
 
+### F1@K
+F1@K adalah metrik evaluasi yang menggabungkan Precision@K dan Recall@K untuk memberikan ukuran keseimbangan antara keduanya. F1@K berguna ketika kita ingin memastikan bahwa sistem rekomendasi tidak hanya memberikan rekomendasi yang akurat (precision tinggi), tetapi juga mencakup sebanyak mungkin item relevan (recall tinggi).
+- Formula <br>
+![f1@k](./image/f1atk.png)
+- Cara kerja <br>
+F1@K berguna ketika kita ingin memastikan bahwa sistem rekomendasi tidak hanya memberikan rekomendasi yang akurat (precision tinggi), tetapi juga mencakup sebanyak mungkin item relevan (recall tinggi).
+
 #### Normalized Discounted Cumulative Gain (NDCG@K)
 NDCG@K adalah metrik yang mengevaluasi kualitas peringkat dari rekomendasi. Tidak hanya memperhitungkan jumlah item relevan yang direkomendasikan, tetapi juga posisi item relevan tersebut dalam daftar rekomendasi. Item relevan yang muncul di posisi lebih atas mendapatkan bobot lebih tinggi.
 - Formula <br>
@@ -185,12 +167,29 @@ NDCG@K memberikan penalti jika item relevan muncul di posisi bawah dalam daftar 
 - Recall@K = 0.2
 - F1@K = 0.2
 - NDCG@K = 1
+<br>
+| Precision@K | Recall@K     | F1@K             | NDCG@K |
+|----|------------------|-------------------|------------------|
+|  0.2  |  0.2   | 0.2            |  0.2          | 1
 
-#### Evaluasi Collaborative Filtering (Dievaluasi untuk rekomendasi bagi user_id=user_10)
-- Precision@K = 0.2
-- Recall@K = 0.2
-- F1@K = 0.2
-- NDCG@K = 0.430677
+#### Interpretasi Metrik Evaluasi
+- Precision@K = 0.2: Dari K produk yang direkomendasikan, hanya 20% yang relevan bagi user_10 berdasarkan preferensinya terhadap product_id_input=1. Ini berarti 80% dari rekomendasi yang diberikan mungkin tidak sesuai.
+- Recall@K = 0.2: Dari semua produk yang sebenarnya relevan untuk user_10 (yang serupa dengan product_id_input=1), sistem hanya berhasil menemukan dan merekomendasikan 20%-nya. Ini berarti 80% produk relevan lainnya terlewatkan.
+- F1@K = 0.2: Ini adalah rata-rata harmonik dari Precision dan Recall. Skor F1 yang rendah (0.2) menunjukkan bahwa sistem belum optimal dalam menyeimbangkan antara memberikan rekomendasi yang akurat (Precision) dan mencakup semua item yang relevan (Recall) untuk kasus spesifik ini.
+- NDCG@K = 1: Ini adalah metrik yang menarik. NDCG@K = 1 berarti bahwa produk-produk yang direkomendasikan (khususnya yang relevan di antara rekomendasi tersebut) diurutkan dengan sempurna berdasarkan tingkat relevansinya. Jadi, jika ada produk relevan dalam daftar rekomendasi (meskipun jumlahnya mungkin sedikit berdasarkan Precision rendah), produk yang paling relevan berada di posisi paling atas, diikuti oleh yang kurang relevan, dan seterusnya.
+
+#### Analisis terhadap Problem Statements
+- Dengan Precision@K = 0.2, 80% rekomendasi yang diberikan tidak relevan. Ini berarti pengguna masih harus menyaring banyak produk yang tidak sesuai, yang tidak secara signifikan membantu mereka menavigasi banyaknya pilihan. Recall@K = 0.2 juga menunjukkan banyak produk yang mungkin cocok justru tidak direkomendasikan.
+- Metrik Precision dan Recall yang rendah (0.2) mengindikasikan bahwa personalisasi berdasarkan preferensi (product_id_input=1 sebagai proxy) belum optimal. Sistem belum berhasil secara konsisten menyajikan produk yang benar-benar sesuai dengan kebutuhan spesifik pengguna ini. Meskipun NDCG@K=1 menunjukkan urutan yang baik jika ada item relevan, masalahnya adalah menemukan item relevan tersebut dalam jumlah yang cukup.
+- Jika pengguna harus melihat 5 rekomendasi untuk menemukan 1 yang mungkin relevan (berdasarkan Precision@K = 0.2), ini mungkin tidak secara signifikan mengurangi waktu dan usaha. Mereka masih perlu memilah-milah. Bahkan, jika produk yang sangat relevan tidak muncul dalam rekomendasi (Recall@K = 0.2), pengguna mungkin masih harus melakukan penelitian manual.
+
+#### Analisis terhadap Goals
+- "Relevan" diukur dengan Precision dan Recall. Kedua metrik ini rendah (0.2), menunjukkan bahwa relevansi rekomendasi untuk kasus ini masih perlu ditingkatkan. Meskipun NDCG@K=1 menunjukkan bahwa jika ada item relevan, mereka diurutkan dengan baik, tantangan utamanya adalah meningkatkan jumlah item relevan yang direkomendasikan.
+- Meskipun sistem menggunakan data preferensi dan karakteristik produk, hasil personalisasi untuk user_10 berdasarkan product_id_input=1 belum memuaskan (Precision/Recall rendah). Ini bisa berarti fitur produk yang digunakan (nama produk, merek, kategori, bahan utama, jenis kulit) atau cara TF-IDF dan cosine similarity diterapkan mungkin belum cukup menangkap nuansa preferensi pengguna ini, atau product_id_input=1 mungkin bukan representasi yang baik dari preferensi umum user_10.
+- Akurasi (dalam hal ini, Precision) rendah. Ini berarti pengguna mungkin tidak mendapatkan rekomendasi yang "tepat sasaran" dengan cepat, sehingga efisiensi belanja belum optimal.
+
+#### Analisis terhadap Solution Statements
+Meskipun pendekatan solusi (Content-Based Filtering dengan TF-IDF dan cosine similarity) secara teoritis dapat mengatasi masalah, implementasi atau konfigurasinya saat ini belum memberikan dampak yang diharapkan untuk kasus uji ini. Relevansi dan cakupan rekomendasi masih rendah. Hal ini disebabkan oleh tidak adanya history data pengguna produk sehingga proses relevansi harus dimodifikasi sedemikian rupa dengan menggunakan data dummy.
 
 ## Hasil Inference (Terhadap preferensi user_id=user_10, product_name="Super Foundation", dan brand="Charlotte Tilbury")
 
@@ -202,15 +201,6 @@ NDCG@K memberikan penalti jika item relevan muncul di posisi bawah dalam daftar 
 | 2  | Perfect Lipstick    | Charlotte Tilbury | Highlighter | 0.791222         |
 | 3  | Perfect Highlighter | Charlotte Tilbury | Primer      | 0.789489         |
 | 4  | Super Lipstick      | Charlotte Tilbury | Highlighter | 0.771009         |
-
-### Collaborative Filtering
-| No | Product_Name     | Brand             | Predicted_Rating |
-|----|------------------|-------------------|------------------|
-| 0  | Super Face Oil   | Sisley            | 4.75129          |
-| 1  | Magic Foundation | Fenty Beauty      | 4.74137          |
-| 2  | Super Contour    | ColourPop         | 4.71937          |
-| 3  | Super Blush      | Ilia Beauty       | 4.67924          |
-| 4  | Super Foundation | Charlotte Tilbury | 4.69243          |
 
 ## Daftar Pustaka
 Alibaba (2023). 7 key beauty industry consumer behavior trends for 2023. Available at: https://reads.alibaba.com/7-key-beauty-industry-consumer-behavior-trends-for-2023/ (Accessed: [insert date]).
