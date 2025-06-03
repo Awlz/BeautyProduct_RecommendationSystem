@@ -96,6 +96,10 @@ DataFrame ratings_df berisi data ulasan pengguna yang disimulasikan (dummy) untu
 
 ### Ekstraksi Fitur Teks dengan TF-IDF
 Untuk membangun sistem rekomendasi berbasis konten (content-based), digunakan metode TF-IDF (Term Frequency-Inverse Document Frequency) dari sklearn.feature_extraction.text.TfidfVectorizer.
+- Kombinasi Fitur <br>
+Fitur-fitur produk yang relevan seperti 'brand', 'Category', 'Main_ingredient', 'skin_type', dan 'Product_Name' ditransformasi. Lalu fitur 'brand', 'Category', dan 'Product_Name' menjadi satu teks deskriptif ('result') untuk setiap produk saat proses modeling. Ini bertujuan untuk menangkap esensi produk secara komprehensif.
+- TF-IDF Vectorization <br>
+Term Frequency-Inverse Document Frequency (TF-IDF) Vectorizer digunakan untuk mengubah fitur yang dikombinasikan menjadi representasi numerik (vektor). TF-IDF memberikan bobot pada kata-kata yang penting dalam mendeskripsikan suatu produk relatif terhadap keseluruhan dataset produk.
 
 ### Perhitungan Cosine Similarity
 Hasil dari TF-IDF matrix kemudian digunakan untuk menghitung cosine similarity untuk mengidentifikasi produk lain yang mirip dengan preferensi pengguna.
@@ -107,14 +111,21 @@ Tahapan modeling bertujuan untuk mengembangkan sistem rekomendasi yang dapat mem
 Pendekatan pertama, Content-Based Filtering, merekomendasikan produk berdasarkan kemiripan fitur atau atribut produk itu sendiri. Sistem ini tidak memerlukan data dari pengguna lain, melainkan fokus pada karakteristik produk yang pernah disukai atau sedang dilihat oleh pengguna.
 
 #### Langkah-Langkah Implementasi 
-- Kombinasi Fitur <br>
-Fitur-fitur produk yang relevan seperti 'brand', 'Category', dan 'Product_Name' digabungkan menjadi satu teks deskriptif ('result') untuk setiap produk. Ini bertujuan untuk menangkap esensi produk secara komprehensif.
-- TF-IDF Vectorization <br>
-Term Frequency-Inverse Document Frequency (TF-IDF) Vectorizer digunakan untuk mengubah teks 'Combined_Features' menjadi representasi numerik (vektor). TF-IDF memberikan bobot pada kata-kata yang penting dalam mendeskripsikan suatu produk relatif terhadap keseluruhan dataset produk.
 - Perhitungan Kemiripan Kosinus (Cosine Similarity) <br>
 Setelah mendapatkan matriks TF-IDF, kemiripan antar produk dihitung menggunakan cosine similarity. Metrik ini mengukur kosinus sudut antara dua vektor produk, di mana skor yang lebih tinggi menunjukkan kemiripan yang lebih besar.
 - Pembuatan Fungsi Rekomendasi <br>
-Fungsi content_based_recommendations(product_name, brand, top_n=5) dibuat untuk menghasilkan rekomendasi. Fungsi ini mengambil nama produk sebagai input, mencari produk tersebut dalam matriks kemiripan, dan mengembalikan top_n produk lain yang paling mirip. Dalam notebook, fungsi ini dipanggil melalui get_recommendations_and_evaluate yang kemudian mencetak hasilnya dalam bentuk tabel.
+Fungsi content_based_recommendations(product_name, brand, top_n=5) dibuat untuk menghasilkan rekomendasi. Fungsi mencari baris dalam DataFrame df yang sesuai dengan kombinasi Product_Name dan Brand yang diberikan. Jika produk tidak ditemukan, fungsi akan mengembalikan satu baris DataFrame dengan informasi bahwa produk tidak ditemukan. Jika indeks produk ditemukan, fungsi mengambil skor cosine similarity terhadap semua produk lainnya dari matriks cosine_sim. Hasilnya disortir untuk mendapatkan produk-produk dengan skor kemiripan tertinggi. Fungsi mengambil top_n produk dengan skor kemiripan tertinggi (selain dirinya sendiri) dan mengambil informasi seperti Product_Name, Brand, dan Category dari DataFrame. Data produk yang mirip dikembalikan dalam bentuk DataFrame dengan tambahan kolom Predicted_Rating yang merepresentasikan skor kemiripan dari cosine similarity. Fungsi ini dapat dipanggil dalam pipeline evaluasi atau antarmuka pengguna, misalnya melalui fungsi get_recommendations_and_evaluate, untuk menampilkan hasil rekomendasi dalam bentuk tabel yang informatif.
+
+#### Hasil Inference (Terhadap preferensi user_id=user_10, product_name="Super Foundation", dan brand="Charlotte Tilbury")
+
+**Content Based Filtering**
+| No | Product_Name        | Brand             | Category    | Predicted_Rating |
+|----|---------------------|-------------------|-------------|------------------|
+| 0  | Super Foundation    | Charlotte Tilbury | Highlighter | 0.830567         |
+| 1  | Divine Foundation   | Charlotte Tilbury | Highlighter | 0.794204         |
+| 2  | Perfect Lipstick    | Charlotte Tilbury | Highlighter | 0.791222         |
+| 3  | Perfect Highlighter | Charlotte Tilbury | Primer      | 0.789489         |
+| 4  | Super Lipstick      | Charlotte Tilbury | Highlighter | 0.771009         |
 
 #### Kelebihan Content Based Filtering
 - Dapat merekomendasikan item baru yang belum memiliki interaksi pengguna (mengatasi item cold-start jika fitur item tersedia).
@@ -186,17 +197,6 @@ NDCG@K memberikan penalti jika item relevan muncul di posisi bawah dalam daftar 
 
 #### Analisis terhadap Solution Statements
 Meskipun pendekatan solusi (Content-Based Filtering dengan TF-IDF dan cosine similarity) secara teoritis dapat mengatasi masalah, implementasi atau konfigurasinya saat ini belum memberikan dampak yang diharapkan untuk kasus uji ini. Relevansi dan cakupan rekomendasi masih rendah. Hal ini disebabkan oleh tidak adanya history data pengguna produk sehingga proses relevansi harus dimodifikasi sedemikian rupa dengan menggunakan data dummy.
-
-## Hasil Inference (Terhadap preferensi user_id=user_10, product_name="Super Foundation", dan brand="Charlotte Tilbury")
-
-### Content Based Filtering
-| No | Product_Name        | Brand             | Category    | Predicted_Rating |
-|----|---------------------|-------------------|-------------|------------------|
-| 0  | Super Foundation    | Charlotte Tilbury | Highlighter | 0.830567         |
-| 1  | Divine Foundation   | Charlotte Tilbury | Highlighter | 0.794204         |
-| 2  | Perfect Lipstick    | Charlotte Tilbury | Highlighter | 0.791222         |
-| 3  | Perfect Highlighter | Charlotte Tilbury | Primer      | 0.789489         |
-| 4  | Super Lipstick      | Charlotte Tilbury | Highlighter | 0.771009         |
 
 ## Daftar Pustaka
 Alibaba (2023). 7 key beauty industry consumer behavior trends for 2023. Available at: https://reads.alibaba.com/7-key-beauty-industry-consumer-behavior-trends-for-2023/ (Accessed: [insert date]).
